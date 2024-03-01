@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @EnableTransactionManagement
 @Configuration
-@MapperScan("top.ssy.mapper")
+@MapperScan("top.ssy.share.admin.mapper")
 public class MybatisPlusConfig {
     
     /**

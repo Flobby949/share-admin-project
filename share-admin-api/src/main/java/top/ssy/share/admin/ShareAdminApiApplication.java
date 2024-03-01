@@ -1,4 +1,4 @@
-package top.ssy.share.admin.share.admin;
+package top.ssy.share.admin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

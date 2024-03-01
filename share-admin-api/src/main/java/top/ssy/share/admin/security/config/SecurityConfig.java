@@ -1,6 +1,5 @@
 package top.ssy.share.admin.security.config;
 
-import top.ssy.share.admin.security.exception.SecurityAuthenticationEntryPoint;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
+import top.ssy.share.admin.security.exception.SecurityAuthenticationEntryPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +31,7 @@ import java.util.List;
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
-@EnableMethodSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
     private final OncePerRequestFilter authenticationTokenFilter;
     private final PermitResource permitResource;

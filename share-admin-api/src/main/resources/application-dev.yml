@@ -1,6 +1,16 @@
 #项目服务器配置
 spring:
-
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://rm-cn-x0r3mu5un0004oho.rwlb.rds.aliyuncs.com:3306/db_share?useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+      username: root
+      password: ABCdef123
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 30000
 
   data:
     redis:
