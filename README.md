@@ -9,7 +9,7 @@
 管理系统前端
 
 ### 启动前端
-使用 VSCode 打开`ssy-admin-vue`, 根据 README 说明安装推荐的插件，然后安装依赖后运行。
+使用 VSCode 打开`share-admin-vue`, 根据 README 说明安装推荐的插件，然后安装依赖后运行。
 ```markdown
 安装依赖 npm install 或 pnpm install
 
