@@ -85,7 +85,6 @@ public class SysManagerServiceImpl extends BaseServiceImpl<SysManagerMapper, Sys
     @Override
     public SysManagerVO getManagerInfo(ManagerDetail manage) {
         SysManagerVO sysManagerVO = new SysManagerVO();
-        System.out.println(">>>>>>getInfo" + manage.getPkId());
         SysManager sysManager = baseMapper.selectById(manage.getPkId());
         if (sysManager == null) {
             throw new ServerException("管理员不存在");

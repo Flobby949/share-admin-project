@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
+ * @author ycshang
  * @ClassName : MybatisPlusConfig
  * @Description :  mybatis-plus配置
  * @Date: 2023年5月17日 11点13分
