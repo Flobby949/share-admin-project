@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ssy.share.admin.mapper.CategoryMapper">
+
+    <select id="getCategoryPage" resultType="top.ssy.share.admin.vo.CategoryVO">
+        select tc.* from t_category tc
+        where tc.delete_flag = 0
+        <if test="query.title != null and query.title != ''  ">
+            and tc.title like concat('%',#{query.title},'%')
+        </if>
+        order by tc.create_time desc
+    </select>
+
+</mapper>

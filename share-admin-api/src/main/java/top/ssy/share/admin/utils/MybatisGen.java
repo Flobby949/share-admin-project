@@ -35,7 +35,6 @@ public class MybatisGen {
         FastAutoGenerator.create("jdbc:mysql://localhost:3306/db_common", "root", "123456")
                 .globalConfig(builder -> {
                     builder.author("ycshang").enableSwagger(); // 设置作者// 开启 swagger 模式
-
                 })
                 .packageConfig(builder -> {
                     builder.parent("com") // 设置父包名

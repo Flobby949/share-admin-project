@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ssy.share.admin.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="top.ssy.share.admin.entity.User">
+        <id column="pk_id" property="pkId"/>
+        <result column="phone" property="phone"/>
+        <result column="wx_open_id" property="wxOpenId"/>
+        <result column="avatar" property="avatar"/>
+        <result column="nickname" property="nickname"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday" property="birthday"/>
+        <result column="bonus" property="bonus"/>
+        <result column="remark" property="remark"/>
+        <result column="delete_flag" property="deleteFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="getUserPage" resultType="top.ssy.share.admin.vo.UserInfoVO">
+        select tu.* from t_user tu
+        where tu.delete_flag = 0
+        <if test="query.nickname != null and query.nickname != ''  ">
+            and tu.nickname like concat('%',#{query.nickname},'%')
+        </if>
+        <if test="query.phone != null and query.phone != ''  ">
+            and tu.phone = #{query.phone}
+        </if>
+        <if test="query.gender != null and query.gender != ''  ">
+            and tu.gender = #{query.gender}
+        </if>
+        order by tu.create_time desc
+    </select>
+
+</mapper>
