@@ -1,2 +1,2 @@
-// * 后端微服务端口名
-export const COMMON_ADMIN_API = '/ssy-admin-api'
+// * 后端服务端口名
+export const _API = '/share-admin-api'

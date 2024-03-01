@@ -1,21 +1,20 @@
 <template>
   <div class="table-box">
     <ProTable
+      rowKey="pkId"
       ref="proTable"
       title="用户列表"
       :columns="columns"
       :requestApi="getTableList"
       :initParam="initParam"
       :dataCallback="dataCallback"
+      :searchCol="{ xs: 1, sm: 2, md: 3, lg: 4, xl: 4 }"
       :row-style="{ height: '0' }"
       :cell-style="{ padding: '0px' }"
-      :searchCol="{ xs: 1, sm: 2, md: 3, lg: 4, xl: 4 }"
-      rowKey="pkId"
     >
-      >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" v-hasPermi="['sys:user:export']" :icon="Download" plain @click="downloadFile">导出</el-button>
+        <el-button type="primary" :icon="Download" plain @click="downloadFile">导出</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
@@ -31,8 +30,7 @@ import { ref, reactive } from 'vue'
 import { ColumnProps } from '@/components/ProTable/interface'
 import ProTable from '@/components/ProTable/index.vue'
 import UserDialog from './components/UserDialog.vue'
-import { Download } from '@element-plus/icons-vue'
-import { View } from '@element-plus/icons-vue'
+import { Download, View } from '@element-plus/icons-vue'
 import { UserApi } from '@/api/modules/user'
 import { ElMessageBox } from 'element-plus'
 import { useDownload } from '@/hooks/useDownload'
@@ -53,8 +51,7 @@ const dataCallback = (data: any) => {
 
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
-  let newParams = { ...params }
-  return UserApi.page(newParams)
+  return UserApi.page(params)
 }
 
 // 表格配置项
@@ -129,11 +126,11 @@ const columns: ColumnProps<UserType>[] = [
     width: 200
   },
   {
-    prop: 'maintenance',
+    prop: 'date',
     label: '日期',
     search: {
       el: 'date-picker',
-      props: { type: 'datetime', format: 'YYYY-MM-DD', valueFormat: 'YYYY-MM-DD', placeholder: '请选择维修日期' }
+      props: { type: 'datetime', format: 'YYYY-MM-DD', valueFormat: 'YYYY-MM-DD', placeholder: '请选择日期' }
     }
   },
   {
@@ -151,7 +148,7 @@ const openDrawer = (title: string, row: Partial<UserType> = {}) => {
     title,
     row: { ...row },
     isView: title === '查看',
-    api: title === '充值' ? UserApi.recharge : title === '编辑' ? UserApi.edit : '',
+    api: title === '编辑' ? UserApi.edit : '',
     getTableList: proTable.value.getTableList,
     maxHeight: '500px'
   }

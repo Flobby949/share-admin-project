@@ -1,5 +1,5 @@
 import http from '@/api'
-import { COMMON_ADMIN_API } from '@/api/axios/servicePort'
+import { _API } from '@/api/axios/servicePort'
 import { DictConfigRes } from '@/api/interface/index'
 
 /**
@@ -7,17 +7,17 @@ import { DictConfigRes } from '@/api/interface/index'
  * @param number 字典编号
  */
 export const dictConfigList = (number: string) => {
-  return http.post<DictConfigRes[]>(COMMON_ADMIN_API + '/dictConfig/page ', { number }, { headers: { noLoading: true } })
+  return http.post<DictConfigRes[]>(_API + '/dictConfig/page ', { number }, { headers: { noLoading: true } })
 }
 
 export const dictConfigAdd = (params: any) => {
-  return http.post(COMMON_ADMIN_API + '/dictConfig/save ', params)
+  return http.post(_API + '/dictConfig/save ', params)
 }
 
 export const dictConfigEdit = (params: any) => {
-  return http.post(COMMON_ADMIN_API + '/dictConfig/edit ', params)
+  return http.post(_API + '/dictConfig/edit ', params)
 }
 
 export const dictConfigDel = (params: any) => {
-  return http.post(COMMON_ADMIN_API + '/dictConfig/remove ', params)
+  return http.post(_API + '/dictConfig/remove ', params)
 }

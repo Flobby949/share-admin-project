@@ -96,10 +96,10 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       cors: true,
       // 跨域代理配置
       proxy: {
-        "/mock": {
-          target: "http://127.0.0.1:4523/mock/2991107",
+        "/dev": {
+          target: "http://127.0.0.1:8081",
           changeOrigin: true,
-          rewrite: path => path.replace(/^\/mock/, "")
+          rewrite: path => path.replace(/^\/dev/, "")
         }
       }
     }

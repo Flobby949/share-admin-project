@@ -33,11 +33,15 @@ import Grid from '@/components/Grid/index.vue'
 import GridItem from '@/components/Grid/components/GridItem.vue'
 
 interface ProTableProps {
-  columns?: ColumnProps[] // 搜索配置列
-  searchParam?: { [key: string]: any } // 搜索参数
+  /** 搜索配置列 */
+  columns?: ColumnProps[]
+  /** 搜索参数 */
+  searchParam?: { [key: string]: any }
   searchCol: number | Record<BreakPoint, number>
-  search: (params: any) => void // 搜索方法
-  reset: (params: any) => void // 重置方法
+  /** 搜索方法 */
+  search: (params: any) => void
+  /** 重置方法 */
+  reset: (params: any) => void
 }
 
 // 默认值
