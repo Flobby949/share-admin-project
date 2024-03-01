@@ -49,7 +49,6 @@ public class SysManagerRoleServiceImpl extends BaseServiceImpl<SysManagerRoleMap
 
     @Override
     public SysManagerRole getByManagerId(Integer managerId) {
-        System.out.println(">>>>>>>>>>>>>>>manager" + managerId);
         SysManagerRole sysManagerRole = baseMapper.selectOne(new LambdaQueryWrapper<SysManagerRole>()
                 .eq(SysManagerRole::getManagerId, managerId));
         if (sysManagerRole == null) {

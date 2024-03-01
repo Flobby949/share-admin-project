@@ -70,17 +70,16 @@ public class SecurityConfig {
 
         http
                 .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeHttpRequests(auth -> auth
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers(permits).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated()
-                )
-                .exceptionHandling().authenticationEntryPoint(new SecurityAuthenticationEntryPoint())
-                .and().headers().frameOptions().disable()
-                .and().csrf(AbstractHttpConfigurer::disable)
-        ;
+                ).exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(new SecurityAuthenticationEntryPoint()))
+                .headers(headers -> headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()))
+                .csrf(csrf -> csrf.disable());
 
         return http.build();
     }
+
 }

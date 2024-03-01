@@ -11,9 +11,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/db_common?useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://121.43.101.104:3306/db_ssy_share?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8 # ?8?
       username: root
-      password: kobe24
+      password: soft@2023
       initial-size: 5
       min-idle: 5
       max-active: 20
@@ -52,7 +52,9 @@ springdoc:
   group-configs:
     - group: 'default'
       paths-to-match: '/**'
-      packages-to-scan: top.ssy.controller
+      packages-to-scan: top.ssy.share.admin.controller
+
+
 # knife4j的增强配置，不需要增强可以不配
 knife4j:
   enable: true
