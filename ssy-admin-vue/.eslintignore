@@ -1,0 +1,8 @@
+/node_modules/*
+/dist/
+/dist*
+/src/main.ts
+/build/
+/*.js
+
+

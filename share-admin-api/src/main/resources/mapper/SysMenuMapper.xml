@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ssy.share.admin.mapper.SysMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="top.ssy.share.admin.entity.SysMenu">
+        <id column="pk_id" property="pkId" />
+        <result column="parent_id" property="parentId" />
+        <result column="name" property="name" />
+        <result column="path" property="path" />
+        <result column="component" property="component" />
+        <result column="type" property="type" />
+        <result column="open_type" property="openType" />
+        <result column="url" property="url" />
+        <result column="icon" property="icon" />
+        <result column="auth" property="auth" />
+        <result column="keep_alive" property="keepAlive" />
+        <result column="sort" property="sort" />
+        <result column="delete_flag" property="deleteFlag" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <select id="getMenuList" resultType="top.ssy.share.admin.entity.SysMenu">
+        select * from sys_menu where delete_flag = 0
+        <if test="type != null and isEq ">
+            and type = #{type}
+        </if>
+        <if test="type != null and !isEq ">
+            and type != #{type}
+        </if>
+        order by sort asc
+    </select>
+
+    <select id="getManagerMenuList" resultType="top.ssy.share.admin.entity.SysMenu">
+        select t3.* from sys_manager_role t1
+        left join sys_role_menu t2 on t1.role_id = t2.role_id
+        left join sys_menu t3 on t2.menu_id = t3.pk_id
+        where t1.manager_id = #{managerId}
+          and t1.delete_flag = 0
+          and t2.delete_flag = 0
+          and t3.delete_flag = 0
+        <if test="type != null and isEq ">
+            and t3.type = #{type}
+        </if>
+        <if test="type != null and !isEq ">
+            and t3.type != #{type}
+        </if>
+        order by t3.sort asc
+    </select>
+
+    <select id="getManagerAuthorityList" resultType="java.lang.String">
+        select t3.auth
+        from sys_manager_role t1
+                 left join sys_role_menu t2 on t1.role_id = t2.role_id
+                 left join sys_menu t3 on t2.menu_id = t3.pk_id
+        where t1.manager_id = #{managerId}
+          and t1.delete_flag = 0
+          and t2.delete_flag = 0
+          and t3.delete_flag = 0
+          and t3.type = 'button'
+        order by t3.sort asc
+    </select>
+
+    <select id="getAuthorityList" resultType="java.lang.String">
+        select auth from sys_menu where delete_flag = 0 and type = 'button'
+    </select>
+
+
+</mapper>

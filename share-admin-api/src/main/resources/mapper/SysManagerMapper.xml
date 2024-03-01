@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ssy.share.admin.mapper.SysManagerMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="top.ssy.share.admin.entity.SysManager">
+        <id column="pk_id" property="pkId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="avatar" property="avatar"/>
+        <result column="super_admin" property="superAdmin"/>
+        <result column="status" property="status"/>
+        <result column="delete_flag" property="deleteFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <select id="getManagerPage" resultType="top.ssy.share.admin.vo.SysManagerVO">
+        select sm.*,smr.role_id as roleId from sys_manager sm
+        left join sys_manager_role smr on sm.pk_id = smr.manager_id and smr.delete_flag = 0
+        where sm.delete_flag = 0
+        <if test="query.username != null and query.username != ''  ">
+            and sm.username like concat('%',#{query.username},'%')
+        </if>
+        order by sm.create_time desc
+    </select>
+
+</mapper>

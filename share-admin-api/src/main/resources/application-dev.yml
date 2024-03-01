@@ -1,0 +1,9 @@
+#项目服务器配置
+spring:
+
+
+  data:
+    redis:
+      host: 127.0.0.1
+      password:
+      port: 6379

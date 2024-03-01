@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geeker-admin
+  namespace: test
+  labels:
+    app: geeker-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geeker-admin
+  template:
+    metadata:
+      labels:
+        app: geeker-admin
+    spec:
+      imagePullSecrets:
+        - name: regsecret
+      containers:
+        - name: geeker-admin
+          image: __IMAGE__
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geeker-admin-svc
+  namespace: test
+spec:
+  selector: #通过下面标签(label)来选择Pod
+    app: geeker-admin
+  ports:
+    - name: http
+      targetPort: 80
+      port: 80

@@ -1,0 +1,28 @@
+variables:
+  # 可调变量
+  PROJ_NAME: geeker-admin
+  SERVER_URL_TEST: https://testjszyy.pspress.cn/
+  # 固定变量
+  REGISTRY: registry.cn-hangzhou.aliyuncs.com
+  REGISTRY_NAME: registry-bd
+
+stages:
+  - build
+  - docker-push
+  - deploy
+
+.my-script:
+  retry: 1
+  timeout: 15 minutes
+  interruptible: true
+
+include:
+  - project: 'cicd/ci-templates'
+    ref: node16
+    file: '.gitlab-ci-build-npm.yml'
+  - project: 'cicd/ci-templates'
+    ref: master
+    file: '.gitlab-ci-push-kaniko.yml'
+  - project: 'cicd/ci-templates'
+    ref: master
+    file: '.gitlab-ci-deploy-k8s.yml'

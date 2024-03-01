@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+#检测是否在ci环境中 是ci环境退出
+[ -n "$CI" ] && exit 0
+
+echo "======== 执行pre-commit校验 ========"
+pnpm run ts:check 
+pnpm run lint:lint-staged

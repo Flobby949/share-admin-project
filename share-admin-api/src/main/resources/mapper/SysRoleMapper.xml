@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ssy.share.admin.mapper.SysRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="SysRoleVOMap" type="top.ssy.share.admin.vo.SysRoleVO">
+        <id column="pk_id" property="pkId"/>
+        <result column="name" property="name"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <collection property="menuIds" ofType="java.lang.Integer"  javaType="java.util.List">
+            <result column="menuId"/>
+        </collection>
+    </resultMap>
+
+    <select id="getRolePage" resultMap="SysRoleVOMap">
+        select sr.*,srm.menu_id as menuId from sys_role sr
+        left join sys_role_menu srm on sr.pk_id = srm.role_id and srm.delete_flag = 0
+        where sr.delete_flag = 0
+        <if test="query.name != null and query.name != ''  ">
+            and sr.name like concat('%',#{query.name},'%')
+        </if>
+        order by sr.create_time desc
+    </select>
+
+</mapper>
