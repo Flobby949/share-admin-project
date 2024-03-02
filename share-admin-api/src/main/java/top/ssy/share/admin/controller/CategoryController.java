@@ -4,19 +4,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import top.ssy.share.admin.common.result.PageResult;
 import top.ssy.share.admin.common.result.Result;
 import top.ssy.share.admin.dto.CategoryEditDTO;
-import top.ssy.share.admin.dto.NoticeEditDTO;
 import top.ssy.share.admin.query.CategoryQuery;
-import top.ssy.share.admin.query.NoticeQuery;
-import top.ssy.share.admin.security.cache.TokenStoreCache;
-import top.ssy.share.admin.security.user.ManagerDetail;
 import top.ssy.share.admin.service.CategoryService;
-import top.ssy.share.admin.service.NoticeService;
 import top.ssy.share.admin.vo.CategoryVO;
-import top.ssy.share.admin.vo.NoticeVO;
+
+import java.util.List;
 
 /**
  * @author : Flobby
@@ -45,6 +44,13 @@ public class CategoryController {
 
         categoryService.saveAndEdit(dto);
 
+        return Result.ok();
+    }
+
+    @PostMapping("/delete")
+    @Operation(summary = "删除")
+    public Result<String> delete(@RequestBody List<Integer> ids) {
+        categoryService.delete(ids);
         return Result.ok();
     }
 }

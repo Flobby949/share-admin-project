@@ -47,7 +47,7 @@ public class ResourceVO {
     @Schema(name = "status", description = "审核状态")
     private Integer status;
     @Schema(name = "remark", description = "审核描述")
-    private Integer remark;
+    private String remark;
     @Schema(name = "createTime", description = "创建时间")
     private LocalDateTime createTime;
 }

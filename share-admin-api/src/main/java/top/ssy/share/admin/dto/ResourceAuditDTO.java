@@ -22,6 +22,6 @@ public class ResourceAuditDTO {
     private Integer status;
 
     @Schema(name = "remark", description = "审核描述")
-    private Integer remark;
+    private String remark;
 
 }

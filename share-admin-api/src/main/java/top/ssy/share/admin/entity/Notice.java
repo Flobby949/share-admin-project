@@ -26,7 +26,13 @@ public class Notice {
     private String cover;
     private String content;
     private Integer adminId;
+    /**
+     * @see top.ssy.share.admin.enums.CommonStatusEnum
+     */
     private Integer isTop;
+    /**
+     * @see top.ssy.share.admin.enums.CommonStatusEnum
+     */
     private Integer isSwiper;
     @TableField(value = "delete_flag", fill = FieldFill.INSERT)
     @TableLogic

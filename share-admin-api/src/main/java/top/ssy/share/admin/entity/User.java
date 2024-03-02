@@ -29,6 +29,10 @@ public class User {
     private String birthday;
     private Integer bonus;
     private String remark;
+    /**
+     * @see top.ssy.share.admin.enums.AccountStatusEnum
+     */
+    private Integer enabled;
     @TableField(value = "delete_flag", fill = FieldFill.INSERT)
     @TableLogic
     private Integer deleteFlag;

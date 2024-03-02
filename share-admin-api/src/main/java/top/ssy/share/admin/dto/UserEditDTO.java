@@ -36,4 +36,6 @@ public class UserEditDTO implements Serializable {
     private String avatar;
     @Schema(description = "生日")
     private String birthday;
+    @Schema(description = "账户状态")
+    private Integer enabled;
 }

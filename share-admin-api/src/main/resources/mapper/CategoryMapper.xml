@@ -8,6 +8,9 @@
         <if test="query.title != null and query.title != ''  ">
             and tc.title like concat('%',#{query.title},'%')
         </if>
+        <if test="query.type != null ">
+            and tc.type = #{query.type}
+        </if>
         order by tc.create_time desc
     </select>
 

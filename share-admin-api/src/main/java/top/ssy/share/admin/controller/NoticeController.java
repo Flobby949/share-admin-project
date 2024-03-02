@@ -14,6 +14,8 @@ import top.ssy.share.admin.security.user.ManagerDetail;
 import top.ssy.share.admin.service.NoticeService;
 import top.ssy.share.admin.vo.NoticeVO;
 
+import java.util.List;
+
 /**
  * @author : Flobby
  * @program : share-admin-api
@@ -43,6 +45,13 @@ public class NoticeController {
         dto.setAdminId(user.getPkId());
         noticeService.saveAndEdit(dto);
 
+        return Result.ok();
+    }
+
+    @PostMapping("/delete")
+    @Operation(summary = "删除")
+    public Result<String> delete(@RequestBody List<Integer> ids) {
+        noticeService.delete(ids);
         return Result.ok();
     }
 }

@@ -7,6 +7,8 @@ import top.ssy.share.admin.entity.Notice;
 import top.ssy.share.admin.query.NoticeQuery;
 import top.ssy.share.admin.vo.NoticeVO;
 
+import java.util.List;
+
 /**
  * @author : Flobby
  * @program : share-admin-api
@@ -20,4 +22,6 @@ public interface NoticeService extends IService<Notice> {
     PageResult<NoticeVO> page(NoticeQuery query);
 
     void saveAndEdit(NoticeEditDTO dto);
+
+    void delete(List<Integer> id);
 }

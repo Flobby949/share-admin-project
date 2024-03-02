@@ -10,6 +10,7 @@ import top.ssy.share.admin.common.result.PageResult;
 import top.ssy.share.admin.convert.UserConvert;
 import top.ssy.share.admin.dto.UserEditDTO;
 import top.ssy.share.admin.entity.User;
+import top.ssy.share.admin.enums.AccountStatusEnum;
 import top.ssy.share.admin.mapper.UserMapper;
 import top.ssy.share.admin.query.UserQuery;
 import top.ssy.share.admin.service.UserService;
@@ -43,6 +44,16 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         if (byPhone != null && !byPhone.getPkId().equals(user.getPkId())) {
             throw new ServerException("手机号已存在");
         }
+        baseMapper.updateById(user);
+    }
+
+    @Override
+    public void enabled(Integer userId) {
+        User user = baseMapper.selectById(userId);
+        if (user == null) {
+            throw new ServerException("用户不存在");
+        }
+        user.setEnabled(user.getEnabled() == AccountStatusEnum.ENABLED.getValue() ? 0 : 1);
         baseMapper.updateById(user);
     }
 }

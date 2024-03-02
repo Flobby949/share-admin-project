@@ -4,16 +4,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.ssy.share.admin.common.result.PageResult;
 import top.ssy.share.admin.common.result.Result;
 import top.ssy.share.admin.dto.UserEditDTO;
+import top.ssy.share.admin.entity.User;
 import top.ssy.share.admin.query.UserQuery;
+import top.ssy.share.admin.service.BonusLogService;
 import top.ssy.share.admin.service.UserService;
+import top.ssy.share.admin.vo.BonusLogVO;
 import top.ssy.share.admin.vo.UserInfoVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author : Flobby
@@ -28,6 +31,7 @@ import top.ssy.share.admin.vo.UserInfoVO;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final BonusLogService bonusLogService;
 
     @PostMapping("/page")
     @Operation(summary = "分页")
@@ -41,6 +45,26 @@ public class UserController {
 
         userService.update(dto);
 
+        return Result.ok();
+    }
+
+    @GetMapping("list")
+    @Operation(summary = "全部用户列表")
+    public Result<List<User>> list() {
+        return Result.ok(userService.list());
+    }
+
+
+    @GetMapping("bonus/list")
+    @Operation(summary = "积分列表")
+    public Result<Map<String, List<BonusLogVO>>> bonusList(@RequestParam Integer userId) {
+        return Result.ok(bonusLogService.userBonusResult(userId));
+    }
+
+    @PostMapping("enabled")
+    @Operation(summary = "账户状态修改")
+    public Result<String> enabled(@RequestParam Integer userId) {
+        userService.enabled(userId);
         return Result.ok();
     }
 

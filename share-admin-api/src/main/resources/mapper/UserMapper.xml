@@ -27,7 +27,7 @@
         <if test="query.phone != null and query.phone != ''  ">
             and tu.phone = #{query.phone}
         </if>
-        <if test="query.gender != null and query.gender != ''  ">
+        <if test="query.gender != null">
             and tu.gender = #{query.gender}
         </if>
         order by tu.create_time desc

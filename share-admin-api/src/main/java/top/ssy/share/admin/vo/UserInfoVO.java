@@ -33,6 +33,8 @@ public class UserInfoVO {
     private Integer bonus;
     @Schema(name = "remark", description = "备注")
     private String remark;
+    @Schema(description = "账户状态")
+    private Integer enabled;
     @Schema(name = "createTime", description = "创建时间")
     private LocalDateTime createTime;
 }

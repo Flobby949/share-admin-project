@@ -15,6 +15,8 @@ import top.ssy.share.admin.query.TagQuery;
 import top.ssy.share.admin.service.TagService;
 import top.ssy.share.admin.vo.TagVO;
 
+import java.util.List;
+
 /**
  * @author : Flobby
  * @program : share-admin-api
@@ -40,7 +42,13 @@ public class TagController {
     @Operation(summary = "新增或修改")
     public Result<String> saveAndEdit(@RequestBody @Valid TagEditDTO dto) {
         tagService.saveAndEdit(dto);
+        return Result.ok();
+    }
 
+    @PostMapping("/delete")
+    @Operation(summary = "删除")
+    public Result<String> delete(@RequestBody List<Integer> ids) {
+        tagService.delete(ids);
         return Result.ok();
     }
 }

@@ -7,6 +7,8 @@ import top.ssy.share.admin.entity.Category;
 import top.ssy.share.admin.query.CategoryQuery;
 import top.ssy.share.admin.vo.CategoryVO;
 
+import java.util.List;
+
 /**
  * @author : Flobby
  * @program : share-admin-api
@@ -19,4 +21,8 @@ public interface CategoryService extends IService<Category> {
     PageResult<CategoryVO> page(CategoryQuery query);
 
     void saveAndEdit(CategoryEditDTO dto);
+
+    List<String> listByPkIdList(List<Integer> pkIdList);
+
+    void delete(List<Integer>  id);
 }

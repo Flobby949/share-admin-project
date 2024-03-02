@@ -8,6 +8,9 @@
         <if test="query.title != null and query.title != ''  ">
             and tt.title like concat('%',#{query.title},'%')
         </if>
+        <if test="query.isHot != null ">
+            and tt.is_hot = #{query.isHot}
+        </if>
         order by tt.create_time desc
     </select>
 

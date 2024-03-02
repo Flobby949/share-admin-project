@@ -9,11 +9,11 @@
         <if test="query.title != null and query.title != ''  ">
             and tn.title like concat('%',#{query.title},'%')
         </if>
-        <if test="query.isTop != null and query.isTop != ''  ">
-            and tn.isTop = #{query.isTop}
+        <if test="query.isTop != null">
+            and tn.is_top = #{query.isTop}
         </if>
-        <if test="query.isSwiper != null and query.isSwiper != ''  ">
-            and tn.isSwiper = #{query.isSwiper}
+        <if test="query.isSwiper != null">
+            and tn.is_swiper = #{query.isSwiper}
         </if>
         order by tn.create_time desc
     </select>

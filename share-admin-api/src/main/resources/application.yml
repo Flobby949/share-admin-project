@@ -67,10 +67,10 @@ auth:
 aliyun:
   oss:
     # oss对外服务的访问域名
-    endpoint: oss-cn-beijing.aliyuncs.com
+    endpoint: oss-cn-nanjing.aliyuncs.com
     # 访问身份验证中用到用户标识
-    accessKeyId: LTAI5
+    accessKeyId: LTAI
     # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
-    accessKeySecret: lK7K1
+    accessKeySecret: FKCa
     # oss的存储空间
-    bucketName: nlgl-shop-api
+    bucketName: FKCa

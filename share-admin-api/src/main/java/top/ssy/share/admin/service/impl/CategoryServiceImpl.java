@@ -7,12 +7,15 @@ import top.ssy.share.admin.common.result.PageResult;
 import top.ssy.share.admin.convert.CategoryConvert;
 import top.ssy.share.admin.dto.CategoryEditDTO;
 import top.ssy.share.admin.entity.Category;
+import top.ssy.share.admin.enums.DeleteFlagEnum;
 import top.ssy.share.admin.mapper.CategoryMapper;
 import top.ssy.share.admin.query.CategoryQuery;
 import top.ssy.share.admin.service.CategoryService;
 import top.ssy.share.admin.vo.CategoryVO;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author : Flobby
@@ -39,5 +42,19 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         } else {
             updateById(category);
         }
+    }
+
+    @Override
+    public List<String> listByPkIdList(List<Integer> pkIdList) {
+        return baseMapper.selectBatchIds(pkIdList)
+                .stream()
+                .filter(category -> Objects.equals(category.getDeleteFlag(), DeleteFlagEnum.NOT_DELETE.getCode()))
+                .map(Category::getTitle)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void delete(List<Integer> id) {
+        baseMapper.deleteBatchIds(id);
     }
 }

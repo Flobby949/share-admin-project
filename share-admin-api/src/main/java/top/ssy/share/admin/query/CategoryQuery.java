@@ -16,4 +16,7 @@ import top.ssy.share.admin.common.model.Query;
 public class CategoryQuery extends Query {
     @Schema(name = "标题")
     private String title;
+
+    @Schema(name = "类型")
+    private Integer type;
 }

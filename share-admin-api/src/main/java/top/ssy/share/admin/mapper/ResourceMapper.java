@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 import top.ssy.share.admin.entity.Resource;
 import top.ssy.share.admin.query.ResourceQuery;
-import top.ssy.share.admin.vo.ResourceVO;
 
 import java.util.List;
 
@@ -18,5 +17,5 @@ import java.util.List;
 
 public interface ResourceMapper extends BaseMapper<Resource> {
 
-    List<ResourceVO> getResourcePage(Page<ResourceVO> page, @Param("query") ResourceQuery query);
+    List<Resource> getResourcePage(Page<Resource> page, @Param("query") ResourceQuery query);
 }

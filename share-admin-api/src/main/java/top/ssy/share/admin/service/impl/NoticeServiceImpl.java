@@ -42,4 +42,9 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
             updateById(newNotice);
         }
     }
+
+    @Override
+    public void delete(List<Integer> id) {
+        baseMapper.deleteBatchIds(id);
+    }
 }
