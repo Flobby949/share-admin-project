@@ -2,6 +2,7 @@ package top.ssy.share.admin.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,12 @@ public class UserController {
     public Result<String> enabled(@RequestParam Integer userId) {
         userService.enabled(userId);
         return Result.ok();
+    }
+
+    @PostMapping("export")
+    @Operation(summary = "导出")
+    public void export(@RequestBody UserQuery query, HttpServletResponse response) {
+        userService.export(query, response);
     }
 
 }

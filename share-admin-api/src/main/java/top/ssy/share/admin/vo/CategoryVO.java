@@ -1,5 +1,6 @@
 package top.ssy.share.admin.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -24,5 +25,6 @@ public class CategoryVO {
     @Schema(name = "description", description = "描述")
     private String description;
     @Schema(name = "createTime", description = "创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
 }

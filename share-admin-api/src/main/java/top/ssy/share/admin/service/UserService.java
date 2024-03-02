@@ -1,6 +1,7 @@
 package top.ssy.share.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.http.HttpServletResponse;
 import top.ssy.share.admin.common.result.PageResult;
 import top.ssy.share.admin.dto.UserEditDTO;
 import top.ssy.share.admin.entity.User;
@@ -28,4 +29,6 @@ public interface UserService  extends IService<User> {
     }
 
     void enabled(Integer userId);
+
+    void export(UserQuery query, HttpServletResponse response);
 }

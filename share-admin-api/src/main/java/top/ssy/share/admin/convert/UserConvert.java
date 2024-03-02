@@ -4,6 +4,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import top.ssy.share.admin.dto.UserEditDTO;
 import top.ssy.share.admin.entity.User;
+import top.ssy.share.admin.vo.UserInfoVO;
+
+import java.util.List;
 
 /**
  * @author : Flobby
@@ -19,4 +22,6 @@ public interface UserConvert {
     UserEditDTO convert(User user);
 
     User convert(UserEditDTO dto);
+
+    List<UserInfoVO> convert(List<User> list);
 }
