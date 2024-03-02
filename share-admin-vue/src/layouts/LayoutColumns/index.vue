@@ -24,7 +24,7 @@
     </div>
     <el-aside :class="{ 'not-aside': !subMenuList.length }" :style="{ width: isCollapse ? '65px' : '210px' }">
       <div class="logo flx-center">
-        <span class="logo-text" v-show="subMenuList.length">{{ isCollapse ? 'G' : 'geeker-admin' }}</span>
+        <span class="logo-text" v-show="subMenuList.length">{{ isCollapse ? 'S' : 'share-admin' }}</span>
       </div>
       <el-scrollbar>
         <el-menu :default-active="activeMenu" :router="false" :collapse="isCollapse" :collapse-transition="false" :unique-opened="true">

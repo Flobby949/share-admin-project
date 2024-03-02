@@ -1,6 +1,6 @@
 variables:
   # 可调变量
-  PROJ_NAME: geeker-admin
+  PROJ_NAME: share-admin
   SERVER_URL_TEST: https://testjszyy.pspress.cn/
   # 固定变量
   REGISTRY: registry.cn-hangzhou.aliyuncs.com

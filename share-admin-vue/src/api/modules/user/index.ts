@@ -12,5 +12,8 @@ export const UserApi = {
   export: (params: any) =>
     http.post(_API + '/user/export', params, {
       responseType: 'blob'
-    })
+    }),
+  findAllUser: () => http.get(_API + '/user/list'),
+  getUserPriceLog: (userId: number) => http.get(_API + '/user/bonus/list?userId=' + userId),
+  freezeUser: (userId: number) => http.post(_API + '/user/enabled?userId=' + userId)
 }

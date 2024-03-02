@@ -14,14 +14,19 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="Download" plain @click="downloadFile">导出</el-button>
+        <el-button type="primary" :icon="Download" plain @click="downloadFile">导出用户</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <el-button type="primary" link :icon="List" @click="openUserScoreDialog('积分信息', scope.row)">积分信息</el-button>
+        <el-button type="primary" link :icon="Key" @click="actionUser('冻结', scope.row)" v-if="scope.row.enabled === 1">冻结用户</el-button>
+        <el-button type="primary" link :icon="Key" @click="actionUser('启用', scope.row)" v-else>启用用户</el-button>
       </template>
     </ProTable>
     <UserDialog ref="dialogRef" />
+    <UserScoreDialog ref="userScoreDialog" />
   </div>
 </template>
 
@@ -30,11 +35,11 @@ import { ref, reactive } from 'vue'
 import { ColumnProps } from '@/components/ProTable/interface'
 import ProTable from '@/components/ProTable/index.vue'
 import UserDialog from './components/UserDialog.vue'
-import { Download, View } from '@element-plus/icons-vue'
+import UserScoreDialog from './components/UserScoreDialog.vue'
+import { Download, View, EditPen, List, Key } from '@element-plus/icons-vue'
 import { UserApi } from '@/api/modules/user'
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import { useDownload } from '@/hooks/useDownload'
-import { useDate } from '@/hooks/useDate'
 
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref()
@@ -69,19 +74,20 @@ const columns: ColumnProps<UserType>[] = [
       )
     }
   },
-  { prop: 'account', label: '账号', width: 120 },
   {
     prop: 'nickname',
+    showOverflowTooltip: true,
     label: '用户名',
     width: 100,
     search: { el: 'input' }
   },
   { prop: 'phone', label: '手机号', search: { el: 'input' }, width: 120 },
-  { prop: 'company', label: '公司' },
+  { prop: 'bonus', label: '积分', width: 120, sortable: true },
   {
     prop: 'gender',
     label: '性别',
-    sortable: true,
+
+    width: 100,
     enum: [
       {
         genderLabel: '男',
@@ -100,37 +106,17 @@ const columns: ColumnProps<UserType>[] = [
     }
   },
   {
-    prop: 'isCertified',
-    label: '是否会员',
+    prop: 'birthday',
+    label: '生日'
+  },
+  {
+    prop: 'enabled',
+    label: '状态',
+
     width: 100,
-    enum: [
-      {
-        certifiedLabel: '否',
-        certifiedValue: 0
-      },
-      {
-        certifiedLabel: '是',
-        certifiedValue: 1
-      }
-    ],
-    search: { el: 'select', props: { filterable: true } },
-    fieldNames: { label: 'certifiedLabel', value: 'certifiedValue' },
     render: (scope) => {
-      let flag = useDate().compare(scope.row.endTime!)
-      return <el-tag type={flag ? 'success' : 'info'}>{flag ? '是' : '否'}</el-tag>
-    }
-  },
-  {
-    prop: 'endTime',
-    label: '会员到期时间',
-    width: 200
-  },
-  {
-    prop: 'date',
-    label: '日期',
-    search: {
-      el: 'date-picker',
-      props: { type: 'datetime', format: 'YYYY-MM-DD', valueFormat: 'YYYY-MM-DD', placeholder: '请选择日期' }
+      let type = scope.row.enabled === 0 ? 'warning' : 'primary'
+      return <el-tag type={type}>{scope.row.enabled === 0 ? '禁用' : '启用'}</el-tag>
     }
   },
   {
@@ -150,7 +136,7 @@ const openDrawer = (title: string, row: Partial<UserType> = {}) => {
     isView: title === '查看',
     api: title === '编辑' ? UserApi.edit : '',
     getTableList: proTable.value.getTableList,
-    maxHeight: '500px'
+    maxHeight: '400px'
   }
   switch (title) {
     case '查看':
@@ -164,8 +150,33 @@ const openDrawer = (title: string, row: Partial<UserType> = {}) => {
   }
 }
 
+// 用户积分
+const userScoreDialog = ref()
+const openUserScoreDialog = (title: string, row: UserType) => {
+  let params = {
+    title,
+    row: { ...row },
+    isView: title === '积分信息',
+    getTableList: proTable.value.getTableList,
+    maxHeight: '400px'
+  }
+  userScoreDialog.value.acceptParams(params)
+}
 // 导出列表
 const downloadFile = async () => {
   ElMessageBox.confirm('确认导出用户数据?', '温馨提示', { type: 'warning' }).then(() => useDownload(UserApi.export, '用户列表', proTable.value?.searchParam))
+}
+
+// 冻结用户
+const actionUser = async (title: string, row: UserType) => {
+  ElMessageBox.confirm(`确认${title}【${row.nickname}】用户?`, '温馨提示', { type: 'warning' }).then(async () => {
+    try {
+      await UserApi.freezeUser(row.pkId)
+      ElMessage.success(`${title}用户成功`)
+      proTable.value.getTableList()
+    } catch (error) {
+      ElMessage.error(`${title}用户失败`)
+    }
+  })
 }
 </script>

@@ -137,3 +137,111 @@ export interface DictConfigRes {
   updateTime: string
   value: number
 }
+
+// * 通知模块
+export namespace SysNotice {
+  export interface ReqGetNoticeParams extends ReqPage {
+    name?: string
+  }
+  export interface ResNoticeList {
+    pkId: number
+    title: string
+    cover: string
+    content: string
+    adminId: number
+    isTop: number
+    isSwiper: number
+    deleteFlag: number
+    createTime: string
+    updateTime: string
+  }
+  export interface ReqEditNoticeParams {
+    pkId?: number
+    title: string
+    cover: string
+    content: string
+    adminId: number
+    isTop: number
+    isSwiper: number
+  }
+}
+
+export namespace SysCategory {
+  export interface ReqGetCategoryParams extends ReqPage {
+    name?: string
+  }
+  export interface ResCategoryList {
+    pkId: number
+    title: string
+    type: number
+    description: string
+    deleteFlag: number
+    createTime: string
+    updateTime: string
+  }
+  export interface ReqEditCategoryParams {
+    title: string
+    type: number
+    description: string
+  }
+}
+
+export namespace SysResource {
+  export interface ReqGetResourceParams extends ReqPage {
+    name?: string
+  }
+  export interface ResResourceList {
+    pkId: number
+    title: string
+    author: number
+    diskType: number
+    resType: number
+    tags: string[]
+    downloadUrl: string
+    detail: string
+    price: number
+    likeNum: number
+    isTop: number
+    status: number
+    remark: string
+    deleteFlag: number
+    createTime: string
+    updateTime: string
+    tagList: string[]
+    resTypeList: string[]
+  }
+  export interface ReqEditResourceParams {
+    title: string
+    author: number
+    diskType: number
+    resType: number
+    tags: string[]
+    downloadUrl: string
+    detail: string
+    price: number
+    likeNum: number
+    isTop: number
+    status: number
+    remark: string
+  }
+}
+
+export namespace SysTag {
+  export interface ReqGetTagParams extends ReqPage {
+    name?: string
+  }
+  export interface ResTagList {
+    pkId: number
+    title: string
+    description: string
+    isHot: string
+    deleteFlag: number
+    createTime: string
+    updateTime: string
+  }
+  export interface ReqEditTagParams {
+    title: string
+    description: string
+    isHot: string
+  }
+}

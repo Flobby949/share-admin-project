@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: geeker-admin
+  name: share-admin
   namespace: test
   labels:
-    app: geeker-admin
+    app: share-admin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: geeker-admin
+      app: share-admin
   template:
     metadata:
       labels:
-        app: geeker-admin
+        app: share-admin
     spec:
       imagePullSecrets:
         - name: regsecret
       containers:
-        - name: geeker-admin
+        - name: share-admin
           image: __IMAGE__
           ports:
             - containerPort: 80
@@ -27,11 +27,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: geeker-admin-svc
+  name: share-admin-svc
   namespace: test
 spec:
   selector: #通过下面标签(label)来选择Pod
-    app: geeker-admin
+    app: share-admin
   ports:
     - name: http
       targetPort: 80

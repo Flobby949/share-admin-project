@@ -10,29 +10,18 @@
         :disabled="dialogProps.isView"
         :hide-required-asterisk="dialogProps.isView"
       >
-        <el-form-item label="用户名" prop="nickname">
-          <el-input v-model="dialogProps.row!.nickname" placeholder="" clearable></el-input>
+        <el-form-item label="分类名称" prop="title">
+          <el-input v-model="dialogProps.row!.title" placeholder="请填写分类名称（10字以内）" clearable></el-input>
         </el-form-item>
-        <el-form-item label="用户头像" prop="avatar">
-          <UploadImg v-model:image-url="dialogProps.row!.avatar" width="135px" height="135px" :file-size="5">
-            <template #empty>
-              <el-icon><Avatar /></el-icon>
-              <span>请上传头像</span>
-            </template>
-            <template #tip> 头像大小不能超过 5M </template>
-          </UploadImg>
+        <el-form-item label="分类类别" prop="type">
+          <!-- select -->
+          <el-select v-model="dialogProps.row!.type" placeholder="请选择分类类别" clearable>
+            <el-option label="网盘类型" :value="0"></el-option>
+            <el-option label="资源类型" :value="1"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input v-model="dialogProps.row!.phone" placeholder="" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="性别" prop="gender">
-          <el-radio-group v-model="dialogProps.row!.gender">
-            <el-radio :label="0" border>男</el-radio>
-            <el-radio :label="1" border>女</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="生日" prop="birthday">
-          <el-date-picker v-model="dialogProps.row!.birthday" type="date" placeholder="选择日期" clearable></el-date-picker>
+        <el-form-item label="分类描述" prop="description">
+          <el-input v-model="dialogProps.row!.description" placeholder="请填写分类描述（200字以内）" :rows="3" type="textarea" maxlength="200"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -49,7 +38,7 @@
 import { ref, reactive } from 'vue'
 import { ElMessage, FormInstance } from 'element-plus'
 import { Dialog } from '@/components/Dialog'
-import UploadImg from '@/components/Upload/Img.vue'
+
 interface DialogProps {
   title: string
   isView: boolean
@@ -59,6 +48,7 @@ interface DialogProps {
   maxHeight?: number | string
   api?: (params: any) => Promise<any>
   getTableList?: () => Promise<any>
+  treeMenuList?: any
 }
 const dialogVisible = ref(false)
 const dialogProps = ref<DialogProps>({
@@ -71,6 +61,7 @@ const dialogProps = ref<DialogProps>({
 })
 
 // 接收父组件传过来的参数
+const treeStrictly = ref(true)
 const acceptParams = (params: DialogProps): void => {
   params.row = { ...dialogProps.value.row, ...params.row }
   dialogProps.value = { ...dialogProps.value, ...params }
@@ -82,8 +73,8 @@ defineExpose({
 })
 
 const rules = reactive({
-  nickname: [
-    { required: true, message: '请输入账号', trigger: 'blur' },
+  title: [
+    { required: true, message: '请输入分类标题', trigger: 'blur' },
     {
       min: 2,
       max: 10,
@@ -91,47 +82,25 @@ const rules = reactive({
       trigger: 'blur'
     }
   ],
-  phone: [
-    { required: true, message: '请输入手机号', trigger: 'blur' },
+  description: [
+    { required: true, message: '请输入分类描述', trigger: 'blur' },
     {
-      pattern: /^1[3-9]\d{9}$/,
-      message: '请输入正确的手机号',
+      min: 1,
+      max: 200,
+      message: '长度在 1 到 200 个字符',
       trigger: 'blur'
     }
   ],
-  avatar: [{ required: true, message: '请上传头像', trigger: 'blur' }],
-  gender: [
-    {
-      required: true,
-      message: '请选择性别',
-      trigger: 'change'
-    }
-  ],
-  birthday: [
-    {
-      required: true,
-      message: '请选择生日',
-      trigger: 'change'
-    }
-  ]
+  type: [{ required: true, message: '请选择分类类型', trigger: 'blur' }]
 })
 const ruleFormRef = ref<FormInstance>()
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async (valid) => {
     if (!valid) return
     try {
-      const date = new Date(dialogProps.value.row.birthday)
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, '0')
-      const day = String(date.getDate()).padStart(2, '0')
-      const formattedDate = `${year}-${month}-${day}`
-      dialogProps.value.row.birthday = formattedDate
-
       await dialogProps.value.api!(dialogProps.value.row)
-      ElMessage.success({ message: `${dialogProps.value.title}成功！` })
+      ElMessage.success({ message: `${dialogProps.value.title}分类成功！` })
       dialogProps.value.getTableList!()
-      dialogVisible.value = false
-      ruleFormRef.value!.resetFields()
       cancelDialog(true)
     } catch (error) {
       console.log(error)
@@ -145,7 +114,29 @@ const cancelDialog = (isClean?: boolean) => {
     dialogProps.value.row = {}
     ruleFormRef.value!.resetFields()
   }
+  treeStrictly.value = true
 }
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+:deep(.penultimate-node) {
+  .el-tree-node__children {
+    padding-left: 60px;
+    line-height: 12px;
+    white-space: pre-wrap;
+
+    .el-tree-node {
+      display: inline-block;
+    }
+
+    .el-tree-node__content {
+      padding-right: 5px;
+      padding-left: 5px !important;
+
+      .el-tree-node__expand-icon {
+        display: none;
+      }
+    }
+  }
+}
+</style>

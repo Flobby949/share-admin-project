@@ -1,5 +1,12 @@
 <template>
-  <Dialog :model-value="dialogVisible" :title="dialogProps.title" :fullscreen="dialogProps.fullscreen" :max-height="dialogProps.maxHeight" :cancel-dialog="cancelDialog">
+  <Dialog
+    :model-value="dialogVisible"
+    :title="dialogProps.title"
+    :fullscreen="dialogProps.fullscreen"
+    :max-height="dialogProps.maxHeight"
+    :cancel-dialog="cancelDialog"
+    width="900px"
+  >
     <div :style="'width: calc(100% - ' + dialogProps.labelWidth! / 2 + 'px)'">
       <el-form
         ref="ruleFormRef"
@@ -10,29 +17,33 @@
         :disabled="dialogProps.isView"
         :hide-required-asterisk="dialogProps.isView"
       >
-        <el-form-item label="用户名" prop="nickname">
-          <el-input v-model="dialogProps.row!.nickname" placeholder="" clearable></el-input>
+        <el-form-item label="通知标题" prop="title">
+          <el-input v-model="dialogProps.row!.title" placeholder="请输入通知标题" clearable></el-input>
         </el-form-item>
-        <el-form-item label="用户头像" prop="avatar">
-          <UploadImg v-model:image-url="dialogProps.row!.avatar" width="135px" height="135px" :file-size="5">
-            <template #empty>
-              <el-icon><Avatar /></el-icon>
-              <span>请上传头像</span>
-            </template>
-            <template #tip> 头像大小不能超过 5M </template>
-          </UploadImg>
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input v-model="dialogProps.row!.phone" placeholder="" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="性别" prop="gender">
-          <el-radio-group v-model="dialogProps.row!.gender">
-            <el-radio :label="0" border>男</el-radio>
-            <el-radio :label="1" border>女</el-radio>
+        <el-form-item label="是否轮播" prop="isSwiper">
+          <el-radio-group v-model="dialogProps.row!.isSwiper">
+            <el-radio :label="0" border>否</el-radio>
+            <el-radio :label="1" border>是</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="生日" prop="birthday">
-          <el-date-picker v-model="dialogProps.row!.birthday" type="date" placeholder="选择日期" clearable></el-date-picker>
+        <el-form-item label="轮播图" prop="cover" v-if="dialogProps.row!.isSwiper === 1">
+          <UploadImg v-model:image-url="dialogProps.row!.cover" width="135px" height="135px" :file-size="5">
+            <template #empty>
+              <el-icon><Avatar /></el-icon>
+              <span>请上传轮播图</span>
+            </template>
+            <template #tip> 轮播图大小不能超过 5M </template>
+          </UploadImg>
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <WangEditor v-model:value="dialogProps.row!.content" height="200px" />
+        </el-form-item>
+
+        <el-form-item label="是否置顶" prop="isTop">
+          <el-radio-group v-model="dialogProps.row!.isTop">
+            <el-radio :label="0" border>否</el-radio>
+            <el-radio :label="1" border>是</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
     </div>
@@ -50,6 +61,7 @@ import { ref, reactive } from 'vue'
 import { ElMessage, FormInstance } from 'element-plus'
 import { Dialog } from '@/components/Dialog'
 import UploadImg from '@/components/Upload/Img.vue'
+import WangEditor from '@/components/WangEditor/index.vue'
 interface DialogProps {
   title: string
   isView: boolean
@@ -72,6 +84,12 @@ const dialogProps = ref<DialogProps>({
 
 // 接收父组件传过来的参数
 const acceptParams = (params: DialogProps): void => {
+  if (params.row.isTop == null) {
+    params.row.isTop = 0
+  }
+  if (params.row.isSwiper == null) {
+    params.row.isSwiper = 0
+  }
   params.row = { ...dialogProps.value.row, ...params.row }
   dialogProps.value = { ...dialogProps.value, ...params }
   dialogVisible.value = true
@@ -82,8 +100,8 @@ defineExpose({
 })
 
 const rules = reactive({
-  nickname: [
-    { required: true, message: '请输入账号', trigger: 'blur' },
+  title: [
+    { required: true, message: '请输入通知标题', trigger: 'blur' },
     {
       min: 2,
       max: 10,
@@ -91,42 +109,23 @@ const rules = reactive({
       trigger: 'blur'
     }
   ],
-  phone: [
-    { required: true, message: '请输入手机号', trigger: 'blur' },
+  content: [
+    { required: true, message: '请输入通知内容', trigger: 'blur' },
     {
-      pattern: /^1[3-9]\d{9}$/,
-      message: '请输入正确的手机号',
+      min: 1,
+      max: 200,
+      message: '长度在 1 到 200 个字符',
       trigger: 'blur'
     }
   ],
-  avatar: [{ required: true, message: '请上传头像', trigger: 'blur' }],
-  gender: [
-    {
-      required: true,
-      message: '请选择性别',
-      trigger: 'change'
-    }
-  ],
-  birthday: [
-    {
-      required: true,
-      message: '请选择生日',
-      trigger: 'change'
-    }
-  ]
+  isTop: [{ required: true, message: '请选择是否置顶', trigger: 'blur' }],
+  isSwiper: [{ required: true, message: '请选择是否轮播', trigger: 'blur' }]
 })
 const ruleFormRef = ref<FormInstance>()
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async (valid) => {
     if (!valid) return
     try {
-      const date = new Date(dialogProps.value.row.birthday)
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, '0')
-      const day = String(date.getDate()).padStart(2, '0')
-      const formattedDate = `${year}-${month}-${day}`
-      dialogProps.value.row.birthday = formattedDate
-
       await dialogProps.value.api!(dialogProps.value.row)
       ElMessage.success({ message: `${dialogProps.value.title}成功！` })
       dialogProps.value.getTableList!()

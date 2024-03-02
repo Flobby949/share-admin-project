@@ -130,7 +130,7 @@ const props = withDefaults(defineProps<ProTableProps>(), {
   initParam: {},
   border: true,
   toolButton: true,
-  rowKey: 'id',
+  rowKey: 'pkId',
   expandAll: false,
   searchCol: () => ({ xs: 1, sm: 2, md: 2, lg: 3, xl: 4 })
 })

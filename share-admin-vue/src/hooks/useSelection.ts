@@ -5,15 +5,17 @@ import { ref, computed } from 'vue'
  * @param {String} selectId 当表格可以多选时，所指定的 id
  * @param {Any} tableRef 当表格 ref
  * */
-export const useSelection = (selectId: string = 'id') => {
+export const useSelection = (selectId: string = 'pkId') => {
+  console.log('selectId', selectId)
+
   // 是否选中数据
   const isSelected = ref<boolean>(false)
   // 选中的数据列表
   const selectedList = ref([])
 
   // 当前选中的所有ids(数组)，可根据项目自行配置id字段
-  const selectedListIds = computed((): string[] => {
-    const ids: string[] = []
+  const selectedListIds = computed((): number[] => {
+    const ids: number[] = []
     selectedList.value.forEach((item) => {
       ids.push(item[selectId])
     })

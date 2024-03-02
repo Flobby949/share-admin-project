@@ -1,13 +1,18 @@
 declare interface UserType {
   pkId: number
+  wxOpenId: string
   account: string
   nickname: string
   avatar?: any
   phone: string
-  company?: any
   gender: number
-  endTime?: string // 会员到期时间
+  birthday: string
+  bonus: number
+  remark: string
+  deleteFlag: number
   createTime?: string
+  updateTime?: string
+  enabled: number
 }
 
 declare interface ReqPageUser {

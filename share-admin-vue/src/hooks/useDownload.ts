@@ -8,7 +8,16 @@ import { ElNotification } from 'element-plus'
  * @param {String} fileType 导出的文件格式(默认为.xlsx)
  * @return void
  * */
-export const useDownload = async (api: (param: any) => Promise<any>, tempName: string, params: any = {}, isNotify: boolean = true, fileType: string = '.xls') => {
+export const useDownload = async (
+  api: (param: any) => Promise<any>,
+  tempName: string,
+  params: any = {
+    page: 1,
+    limit: 10
+  },
+  isNotify: boolean = true,
+  fileType: string = '.xls'
+) => {
   if (isNotify) {
     ElNotification({
       title: '温馨提示',
