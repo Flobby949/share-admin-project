@@ -11,9 +11,10 @@
         :hide-required-asterisk="dialogProps.isView"
       >
         <el-form-item label="审核状态" prop="status">
-          <el-select v-model="dialogProps.row.status" placeholder="请选择审核状态" clearable>
-            <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
+          <el-radio-group v-model="dialogProps.row!.status">
+            <el-radio :label="1" border>审核通过</el-radio>
+            <el-radio :label="2" border>审核不通过</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="审核描述" prop="remark">
           <el-input v-model="dialogProps.row.remark" type="textarea" :rows="3" :disabled="dialogProps.isView" placeholder="请输入审核意见长度需要小于200字" />
@@ -48,17 +49,11 @@ const dialogVisible = ref(false)
 const dialogProps = ref<DialogProps>({
   isView: false,
   title: '',
-  row: { status: 1 },
+  row: { status: 0, remark: '' },
   labelWidth: 160,
   fullscreen: true,
   maxHeight: '500px'
 })
-
-const statusList = reactive([
-  { label: '待审核', value: 0 },
-  { label: '审核通过', value: 1 },
-  { label: '审核不通过', value: 2 }
-])
 
 // 接收父组件传过来的参数
 const acceptParams = (params: DialogProps): void => {
@@ -72,7 +67,19 @@ defineExpose({
 })
 
 const rules = reactive({
-  status: [{ required: true, message: '请选择审核状态', trigger: 'change' }],
+  status: [
+    { required: true, message: '请选择是否通过审核', trigger: 'blur' },
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (value === 1 || value === 2) {
+          callback()
+        } else {
+          callback(new Error('请选择是否通过审核'))
+        }
+      },
+      trigger: 'blur'
+    }
+  ],
   remark: [
     { required: true, message: '请输入审核描述', trigger: 'blur' },
     {

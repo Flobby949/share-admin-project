@@ -3,13 +3,13 @@
     <ProTable ref="proTable" title="分类列表" :columns="columns" :requestApi="getTableList" :initParam="initParam" :dataCallback="dataCallback">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增分类</el-button>
+        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')" v-hasPermi="['sys:category:add']">新增分类</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="danger" link :icon="Delete" @click="deleteRow(scope.row)">删除</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)" v-hasPermi="['sys:category:view']">查看</el-button>
+        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)" v-hasPermi="['sys:category:edit']">编辑</el-button>
+        <el-button type="danger" link :icon="Delete" @click="deleteRow(scope.row)" v-hasPermi="['sys:category:remove']">删除</el-button>
       </template>
     </ProTable>
     <CategoryDialog ref="dialogRef" />
@@ -25,6 +25,7 @@ import ProTable from '@/components/ProTable/index.vue'
 import CategoryDialog from '@/views/Resource/components/CategoryDialog.vue'
 import { CirclePlus, Delete, EditPen, View } from '@element-plus/icons-vue'
 import { getCategoryPage, addCategory, editCategory, deleteCategory } from '@/api/modules/category'
+import { dictConfigList } from '@/api/modules/dict/dictConfig'
 
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref()
@@ -60,15 +61,15 @@ const columns: ColumnProps[] = [
     prop: 'type',
     label: '分类',
     width: 100,
-    search: { el: 'select' },
-    enum: [
-      { label: '网盘类型', value: 0 },
-      { label: '资源类型', value: 1 }
-    ],
-    fieldNames: { label: 'label', value: 'value' },
+    search: { el: 'select', props: { filterable: true } },
+    // enum: [
+    //   { title: '网盘类型', value: 0 },
+    //   { title: '资源类型', value: 1 }
+    // ],
+    enum: () => dictConfigList('categoryType'),
+    fieldNames: { label: 'title', value: 'value' },
     render: (scope) => {
-      let type = scope.row.type === 0 ? 'success' : 'primary'
-      return <el-tag type={type}>{scope.row.type == 0 ? '网盘类型' : '资源类型'}</el-tag>
+      return <el-tag type={scope.row.type === 0 ? 'success' : 'primary'}>{scope.row.type == 0 ? '网盘类型' : '资源类型'}</el-tag>
     }
   },
   {

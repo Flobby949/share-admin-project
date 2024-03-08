@@ -14,15 +14,15 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="Download" plain @click="downloadFile">导出用户</el-button>
+        <el-button type="primary" :icon="Download" plain @click="downloadFile" v-hasPermi="['sys:user:export']">导出用户</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link :icon="List" @click="openUserScoreDialog('积分信息', scope.row)">积分信息</el-button>
-        <el-button type="primary" link :icon="Key" @click="actionUser('冻结', scope.row)" v-if="scope.row.enabled === 1">冻结用户</el-button>
-        <el-button type="primary" link :icon="Key" @click="actionUser('启用', scope.row)" v-else>启用用户</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)" v-hasPermi="['sys:user:view']">查看</el-button>
+        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)" v-hasPermi="['sys:user:edit']">编辑</el-button>
+        <el-button type="primary" link :icon="List" @click="openUserScoreDialog('积分信息', scope.row)" v-hasPermi="['sys:user:bonus']">积分信息</el-button>
+        <el-button type="primary" link :icon="Key" @click="actionUser('冻结', scope.row)" v-if="scope.row.enabled === 1" v-hasPermi="['sys:user:ice']">冻结用户</el-button>
+        <el-button type="primary" link :icon="Key" @click="actionUser('启用', scope.row)" v-else v-hasPermi="['sys:user:ice']">启用用户</el-button>
       </template>
     </ProTable>
     <UserDialog ref="dialogRef" />
@@ -40,7 +40,7 @@ import { Download, View, EditPen, List, Key } from '@element-plus/icons-vue'
 import { UserApi } from '@/api/modules/user'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { useDownload } from '@/hooks/useDownload'
-
+import { dictConfigList } from '@/api/modules/dict/dictConfig'
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref()
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
@@ -88,21 +88,21 @@ const columns: ColumnProps<UserType>[] = [
     label: '性别',
 
     width: 100,
-    enum: [
-      {
-        genderLabel: '男',
-        genderValue: 0
-      },
-      {
-        genderLabel: '女',
-        genderValue: 1
-      }
-    ],
+    // enum: [
+    //   {
+    //     title: '男',
+    //     value: 0
+    //   },
+    //   {
+    //     title: '女',
+    //     value: 1
+    //   }
+    // ],
+    enum: () => dictConfigList('gender'),
     search: { el: 'select', props: { filterable: true } },
-    fieldNames: { label: 'genderLabel', value: 'genderValue' },
+    fieldNames: { label: 'title', value: 'value' },
     render: (scope) => {
-      let type = scope.row.gender === 0 ? 'success' : 'warning'
-      return <el-tag type={type}>{scope.row.gender === 0 ? '男' : '女'}</el-tag>
+      return <el-tag type={scope.row.gender === 0 ? 'success' : 'warning'}>{scope.row.gender === 0 ? '男' : '女'}</el-tag>
     }
   },
   {
@@ -112,11 +112,9 @@ const columns: ColumnProps<UserType>[] = [
   {
     prop: 'enabled',
     label: '状态',
-
     width: 100,
     render: (scope) => {
-      let type = scope.row.enabled === 0 ? 'warning' : 'primary'
-      return <el-tag type={type}>{scope.row.enabled === 0 ? '禁用' : '启用'}</el-tag>
+      return <el-tag type={scope.row.enabled === 0 ? 'warning' : 'primary'}>{scope.row.enabled === 0 ? '禁用' : '启用'}</el-tag>
     }
   },
   {

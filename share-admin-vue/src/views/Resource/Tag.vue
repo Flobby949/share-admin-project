@@ -3,14 +3,16 @@
     <ProTable ref="proTable" title="标签列表" :columns="columns" :requestApi="getTableList" :initParam="initParam" :dataCallback="dataCallback">
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增标签</el-button>
-        <el-button type="danger" :icon="Delete" plain :disabled="!scope.isSelected" @click="deleteBatch(scope.selectedListIds)">批量删除标签</el-button>
+        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')" v-hasPermi="['sys:tag:add']">新增标签</el-button>
+        <el-button type="danger" :icon="Delete" plain :disabled="!scope.isSelected" @click="deleteBatch(scope.selectedListIds)" v-hasPermi="['sys:tag:remove']"
+          >批量删除标签</el-button
+        >
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="danger" link :icon="Delete" @click="deleteRow(scope.row)">删除</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)" v-hasPermi="['sys:tag:view']">查看</el-button>
+        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)" v-hasPermi="['sys:tag:edit']">编辑</el-button>
+        <el-button type="danger" link :icon="Delete" @click="deleteRow(scope.row)" v-hasPermi="['sys:tag:remove']">删除</el-button>
       </template>
     </ProTable>
     <TagDialog ref="dialogRef" />
@@ -27,6 +29,8 @@ import TagDialog from '@/views/Resource/components/TagDialog.vue'
 import { CirclePlus, Delete, EditPen, View } from '@element-plus/icons-vue'
 import { getTagPage, addTag, editTag, deleteTag } from '@/api/modules/tag'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { dictConfigList } from '@/api/modules/dict/dictConfig'
+
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref()
 
@@ -60,18 +64,19 @@ const columns: ColumnProps[] = [
     prop: 'isHot',
     label: '是否热门',
     width: 100,
-    enum: [
-      { label: '否', value: 0 },
-      { label: '是', value: 1 }
-    ],
+    // enum: [
+    //   { title: '否', value: 0 },
+    //   { title: '是', value: 1 }
+    // ],
+    enum: () => dictConfigList('isHot'),
     search: {
-      el: 'select'
+      el: 'select',
+      props: { filterable: true }
     },
-    fieldNames: { label: 'label', value: 'value' },
+    fieldNames: { label: 'title', value: 'value' },
     render: (scope) => {
-      let type = scope.row.isHot === 1 ? 'success' : 'info'
       return (
-        <el-tag type={type} effect>
+        <el-tag type={scope.row.isHot === 1 ? 'success' : 'info'} effect>
           {scope.row.isHot === 1 ? '是' : '否'}
         </el-tag>
       )

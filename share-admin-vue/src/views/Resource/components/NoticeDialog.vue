@@ -20,6 +20,13 @@
         <el-form-item label="通知标题" prop="title">
           <el-input v-model="dialogProps.row!.title" placeholder="请输入通知标题" clearable></el-input>
         </el-form-item>
+
+        <el-form-item label="是否置顶" prop="isTop">
+          <el-radio-group v-model="dialogProps.row!.isTop">
+            <el-radio :label="0" border>否</el-radio>
+            <el-radio :label="1" border>是</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="是否轮播" prop="isSwiper">
           <el-radio-group v-model="dialogProps.row!.isSwiper">
             <el-radio :label="0" border>否</el-radio>
@@ -29,7 +36,7 @@
         <el-form-item label="轮播图" prop="cover" v-if="dialogProps.row!.isSwiper === 1">
           <UploadImg v-model:image-url="dialogProps.row!.cover" width="135px" height="135px" :file-size="5">
             <template #empty>
-              <el-icon><Avatar /></el-icon>
+              <el-icon><Upload /></el-icon>
               <span>请上传轮播图</span>
             </template>
             <template #tip> 轮播图大小不能超过 5M </template>
@@ -37,13 +44,6 @@
         </el-form-item>
         <el-form-item label="内容" prop="content">
           <WangEditor v-model:value="dialogProps.row!.content" height="200px" />
-        </el-form-item>
-
-        <el-form-item label="是否置顶" prop="isTop">
-          <el-radio-group v-model="dialogProps.row!.isTop">
-            <el-radio :label="0" border>否</el-radio>
-            <el-radio :label="1" border>是</el-radio>
-          </el-radio-group>
         </el-form-item>
       </el-form>
     </div>

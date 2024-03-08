@@ -3,7 +3,7 @@
     <ProTable ref="proTable" title="资源列表" :columns="columns" :requestApi="getTableList" :initParam="initParam" :dataCallback="dataCallback">
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="EditPen" @click="openDrawer('审批', scope.row)" v-if="scope.row.status == 0">审批</el-button>
+        <el-button type="primary" link :icon="EditPen" v-hasPermi="['sys:resource:audit']" @click="openDrawer('审批', scope.row)" v-if="scope.row.status == 0">审批</el-button>
       </template>
     </ProTable>
     <ResourceDialog ref="dialogRef" />
@@ -20,6 +20,7 @@ import ResourceDialog from '@/views/Resource/components/ResourceDialog.vue'
 import { EditPen } from '@element-plus/icons-vue'
 import { getResourcePage, auditResource } from '@/api/modules/resource'
 import { UserApi } from '@/api/modules/user'
+import { dictConfigList } from '@/api/modules/dict/dictConfig'
 
 // 查询所有用户
 const userList = ref<any[]>([])
@@ -67,6 +68,7 @@ const columns: ColumnProps<SysResource.ResResourceList>[] = [
   {
     prop: 'author',
     label: '作者',
+    showOverflowTooltip: true,
     search: { el: 'select' },
     enum: userList.value,
     fieldNames: { label: 'label', value: 'value' }
@@ -80,7 +82,7 @@ const columns: ColumnProps<SysResource.ResResourceList>[] = [
     prop: 'resTypeList',
     label: '资源分类',
     showOverflowTooltip: true,
-    width: 200,
+    width: 300,
     render: (scope) => {
       return scope.row.resTypeList.map((item: string) => {
         return (
@@ -95,7 +97,7 @@ const columns: ColumnProps<SysResource.ResResourceList>[] = [
     prop: 'tagList',
     label: '标签',
     showOverflowTooltip: true,
-    width: 200,
+    width: 300,
     render: (scope) => {
       let tagList = scope.row.tagList
       return (
@@ -116,15 +118,15 @@ const columns: ColumnProps<SysResource.ResResourceList>[] = [
     label: '是否置顶',
     width: 100,
     search: { el: 'select', props: { filterable: true } },
-    enum: [
-      { label: '是', value: 1 },
-      { label: '否', value: 0 }
-    ],
-    fieldNames: { label: 'label', value: 'value' },
+    // enum: [
+    //   { title: '是', value: 1 },
+    //   { title: '否', value: 0 }
+    // ],
+    enum: () => dictConfigList('isTop'),
+    fieldNames: { label: 'title', value: 'value' },
     render: (scope) => {
-      let type = scope.row.isTop === 0 ? 'success' : 'warning'
       return (
-        <el-tag type={type} effect round>
+        <el-tag type={scope.row.isTop === 0 ? 'success' : 'warning'} effect round>
           {scope.row.isTop === 1 ? '是' : '否'}
         </el-tag>
       )
@@ -153,12 +155,13 @@ const columns: ColumnProps<SysResource.ResResourceList>[] = [
     label: '审核状态',
     width: 150,
     search: { el: 'select', props: { filterable: true } },
-    fieldNames: { label: 'label', value: 'value' },
-    enum: [
-      { label: '待审核', value: 0 },
-      { label: '审核通过', value: 1 },
-      { label: '审核不通过', value: 2 }
-    ],
+    fieldNames: { label: 'title', value: 'value' },
+    // enum: [
+    //   { title: '待审核', value: 0 },
+    //   { title: '审核通过', value: 1 },
+    //   { title: '审核不通过', value: 2 }
+    // ],
+    enum: () => dictConfigList('status'),
     render: (scope) => {
       let type = scope.row.status === 0 ? 'warning' : scope.row.status === 1 ? 'success' : 'danger'
       return <el-tag type={type}>{scope.row.status === 0 ? '待审核' : scope.row.status === 1 ? '审核通过' : '审核不通过'}</el-tag>

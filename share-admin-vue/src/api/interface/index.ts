@@ -164,6 +164,16 @@ export namespace SysNotice {
     isTop: number
     isSwiper: number
   }
+
+  export interface ReqAddNoticeParams {
+    pkId?: number
+    title: string
+    cover: string
+    content: string
+    adminId: number
+    isTop: number
+    isSwiper: number
+  }
 }
 
 export namespace SysCategory {
@@ -180,6 +190,12 @@ export namespace SysCategory {
     updateTime: string
   }
   export interface ReqEditCategoryParams {
+    title: string
+    type: number
+    description: string
+  }
+
+  export interface ReqAddCategoryParams {
     title: string
     type: number
     description: string
@@ -210,20 +226,6 @@ export namespace SysResource {
     tagList: string[]
     resTypeList: string[]
   }
-  export interface ReqEditResourceParams {
-    title: string
-    author: number
-    diskType: number
-    resType: number
-    tags: string[]
-    downloadUrl: string
-    detail: string
-    price: number
-    likeNum: number
-    isTop: number
-    status: number
-    remark: string
-  }
 }
 
 export namespace SysTag {
@@ -240,6 +242,12 @@ export namespace SysTag {
     updateTime: string
   }
   export interface ReqEditTagParams {
+    title: string
+    description: string
+    isHot: string
+  }
+
+  export interface ReqAddTagParams {
     title: string
     description: string
     isHot: string

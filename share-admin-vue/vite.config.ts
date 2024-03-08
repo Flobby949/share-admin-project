@@ -97,7 +97,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       // 跨域代理配置
       proxy: {
         "/dev": {
-          target: "http://10.20.121.68:8081/",
+          target: "http://192.168.31.59:8081/",
           changeOrigin: true,
           rewrite: path => path.replace(/^\/dev/, "")
         }

@@ -3,13 +3,13 @@
     <ProTable ref="proTable" title="通知列表" :columns="columns" :requestApi="getTableList" :initParam="initParam" :dataCallback="dataCallback">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增通知</el-button>
+        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')" v-hasPermi="['sys:notice:add']">新增通知</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="danger" link :icon="Delete" @click="deleteRow(scope.row)">删除</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)" v-hasPermi="['sys:notice:view']">查看</el-button>
+        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)" v-hasPermi="['sys:notice:edit']">编辑</el-button>
+        <el-button type="danger" link :icon="Delete" @click="deleteRow(scope.row)" v-hasPermi="['sys:notice:remove']">删除</el-button>
       </template>
     </ProTable>
     <NoticeDialog ref="dialogRef" />
@@ -25,6 +25,7 @@ import ProTable from '@/components/ProTable/index.vue'
 import NoticeDialog from '@/views/Resource/components/NoticeDialog.vue'
 import { CirclePlus, Delete, EditPen, View } from '@element-plus/icons-vue'
 import { getNoticePage, addNotice, editNotice, deleteNotice } from '@/api/modules/notice'
+import { dictConfigList } from '@/api/modules/dict/dictConfig'
 
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref()
@@ -60,31 +61,31 @@ const columns: ColumnProps[] = [
     prop: 'isTop',
     label: '是否置顶',
     width: 100,
-    enum: [
-      { label: '是', value: 1 },
-      { label: '否', value: 0 }
-    ],
+    // enum: [
+    //   { title: '是', value: 1 },
+    //   { title: '否', value: 0 }
+    // ],
+    enum: () => dictConfigList('isTop'),
     search: { el: 'select', props: { filterable: true } },
-    fieldNames: { label: 'label', value: 'value' },
+    fieldNames: { label: 'title', value: 'value' },
     render: (scope) => {
-      let type = scope.row.isTop === 0 ? 'success' : 'warning'
-      return <el-tag type={type}>{scope.row.isTop === 1 ? '是' : '否'}</el-tag>
+      return <el-tag type={scope.row.isTop === 0 ? 'success' : 'warning'}>{scope.row.isTop === 1 ? '是' : '否'}</el-tag>
     }
   },
   {
     prop: 'isSwiper',
     label: '是否轮播',
     width: 100,
-    enum: [
-      { label: '是', value: 1 },
-      { label: '否', value: 0 }
-    ],
+    // enum: [
+    //   { title: '是', value: 1 },
+    //   { title: '否', value: 0 }
+    // ],
+    enum: () => dictConfigList('isSwiper'),
     search: { el: 'select', props: { filterable: true } },
-    fieldNames: { label: 'label', value: 'value' },
+    fieldNames: { label: 'title', value: 'value' },
     render: (scope) => {
-      let type = scope.row.isSwiper === 1 ? 'primary' : 'info'
       return (
-        <el-tag type={type} effect>
+        <el-tag type={scope.row.isSwiper === 1 ? 'primary' : 'info'} effect>
           {scope.row.isSwiper === 1 ? '是' : '否'}
         </el-tag>
       )
