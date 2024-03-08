@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,21 +35,22 @@ public class CategoryController {
 
     @PostMapping("/page")
     @Operation(summary = "分页")
+    @PreAuthorize("hasAuthority('sys:category:view')")
     public Result<PageResult<CategoryVO>> page(@RequestBody @Valid CategoryQuery query) {
         return Result.ok(categoryService.page(query));
     }
 
     @PostMapping("saveAndEdit")
     @Operation(summary = "新增或修改")
-    public Result<String> saveAndEdit(@RequestBody @Valid CategoryEditDTO dto) {
-
+    @PreAuthorize("hasAnyAuthority('sys:category:add', 'sys:category:edit')")
+    public Result<String> savedAndEdit(@RequestBody @Valid CategoryEditDTO dto) {
         categoryService.saveAndEdit(dto);
-
         return Result.ok();
     }
 
     @PostMapping("/delete")
     @Operation(summary = "删除")
+    @PreAuthorize("hasAuthority('sys:category:remove')")
     public Result<String> delete(@RequestBody List<Integer> ids) {
         categoryService.delete(ids);
         return Result.ok();

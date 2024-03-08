@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import top.ssy.share.admin.common.result.PageResult;
 import top.ssy.share.admin.common.result.Result;
@@ -36,12 +37,14 @@ public class UserController {
 
     @PostMapping("/page")
     @Operation(summary = "分页")
+    @PreAuthorize("hasAuthority('sys:user:view')")
     public Result<PageResult<UserInfoVO>> page(@RequestBody @Valid UserQuery query) {
         return Result.ok(userService.page(query));
     }
 
     @PostMapping("edit")
     @Operation(summary = "修改")
+    @PreAuthorize("hasAuthority('sys:user:edit')")
     public Result<String> update(@RequestBody @Valid UserEditDTO dto) {
 
         userService.update(dto);
@@ -58,12 +61,14 @@ public class UserController {
 
     @GetMapping("bonus/list")
     @Operation(summary = "积分列表")
+    @PreAuthorize("hasAuthority('sys:user:bonus')")
     public Result<Map<String, List<BonusLogVO>>> bonusList(@RequestParam Integer userId) {
         return Result.ok(bonusLogService.userBonusResult(userId));
     }
 
     @PostMapping("enabled")
     @Operation(summary = "账户状态修改")
+    @PreAuthorize("hasAuthority('sys:user:ice')")
     public Result<String> enabled(@RequestParam Integer userId) {
         userService.enabled(userId);
         return Result.ok();
@@ -71,6 +76,7 @@ public class UserController {
 
     @PostMapping("export")
     @Operation(summary = "导出")
+    @PreAuthorize("hasAuthority('sys:user:export')")
     public void export(@RequestBody UserQuery query, HttpServletResponse response) {
         userService.export(query, response);
     }

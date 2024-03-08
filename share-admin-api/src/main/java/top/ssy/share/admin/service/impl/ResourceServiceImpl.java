@@ -18,12 +18,16 @@ import top.ssy.share.admin.entity.Resource;
 import top.ssy.share.admin.entity.User;
 import top.ssy.share.admin.enums.BonusActionEnum;
 import top.ssy.share.admin.enums.DeleteFlagEnum;
+import top.ssy.share.admin.enums.ResourceStatusEnum;
+import top.ssy.share.admin.enums.UserActionEnum;
 import top.ssy.share.admin.mapper.ResourceMapper;
 import top.ssy.share.admin.query.ResourceQuery;
 import top.ssy.share.admin.service.*;
 import top.ssy.share.admin.vo.ResourceVO;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +45,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     private final CategoryService categoryService;
     private final UserService userService;
     private final BonusLogService bonusLogService;
+    private final UserActionService userActionService;
 
     @Override
     public PageResult<ResourceVO> page(ResourceQuery query) {
@@ -77,15 +82,39 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         resource.setStatus(dto.getStatus());
         resource.setRemark(dto.getRemark());
         baseMapper.updateById(resource);
-
         User author = userService.getById(resource.getAuthor());
         if (ObjectUtils.isEmpty(author)) {
             log.error("作者不存在, pkId:{}", resource.getAuthor());
             throw new ServerException("作者不存在");
         }
+
+        // 审核不通过，删除记录
+        if (dto.getStatus().equals(ResourceStatusEnum.NOT_AUDITED.getCode())) {
+            userActionService.deleteUserAction(author.getPkId(), resource.getPkId(), UserActionEnum.PUBLISH);
+            return;
+        }
+
         author.setBonus(author.getBonus() + 10);
         userService.updateById(author);
 
         bonusLogService.addBonusLog(author.getPkId(), BonusActionEnum.RESOURCE_AUDIT_PASS);
+    }
+
+    @Override
+    public Map<String, Long> countResource() {
+        List<Map<String, Object>> list = baseMapper.selectCountByDiskType();
+        if (list.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        return list.stream()
+                .collect(Collectors.toMap(
+                        item -> item.get("diskType").toString(),
+                        item -> Long.parseLong(item.get("count").toString())
+                ));
+    }
+
+    @Override
+    public Long countResourceByStatus(ResourceStatusEnum status) {
+        return baseMapper.selectCount(new LambdaQueryWrapper<Resource>().eq(Resource::getStatus, status.getCode()));
     }
 }

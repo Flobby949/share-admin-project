@@ -24,4 +24,11 @@
         </if>
         order by tr.create_time desc
     </select>
+
+    <select id="selectCountByDiskType" resultType="java.util.Map">
+        select count(1) as count, tc.title as diskType from t_resource tr
+                                                           left join t_category tc on tc.type = 0 and tc.pk_id = tr.disk_type
+        where tr.delete_flag = 0
+        group by tr.disk_type
+    </select>
 </mapper>

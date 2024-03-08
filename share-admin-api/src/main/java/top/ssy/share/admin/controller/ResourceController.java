@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,12 +32,14 @@ public class ResourceController {
 
     @PostMapping("/page")
     @Operation(summary = "分页")
+    @PreAuthorize("hasAuthority('sys:resource:view')")
     public Result<PageResult<ResourceVO>> page(@RequestBody @Valid ResourceQuery query) {
         return Result.ok(resourceService.page(query));
     }
 
     @PostMapping("/audit")
     @Operation(summary = "审核")
+    @PreAuthorize("hasAuthority('sys:resource:audit')")
     public Result<Void> audit(@RequestBody @Valid ResourceAuditDTO dto) {
         resourceService.audit(dto);
         return Result.ok();

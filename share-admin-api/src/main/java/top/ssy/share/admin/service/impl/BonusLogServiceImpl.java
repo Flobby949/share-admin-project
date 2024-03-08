@@ -11,6 +11,8 @@ import top.ssy.share.admin.mapper.BonusLogMapper;
 import top.ssy.share.admin.service.BonusLogService;
 import top.ssy.share.admin.vo.BonusLogVO;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,12 +38,12 @@ public class BonusLogServiceImpl extends ServiceImpl<BonusLogMapper, BonusLog> i
 
     @Override
     public void addBonusLog(Integer userId, BonusActionEnum contentEnum, Integer bonus) {
-        addBonusLog(userId, contentEnum.getType(), bonus);
+        addBonusLog(userId, contentEnum.getDesc(), bonus);
     }
 
     @Override
     public void addBonusLog(Integer userId, BonusActionEnum contentEnum) {
-        addBonusLog(userId, contentEnum.getType(), contentEnum.getBonus());
+        addBonusLog(userId, contentEnum.getDesc(), contentEnum.getBonus());
     }
 
     @Override
@@ -50,6 +52,26 @@ public class BonusLogServiceImpl extends ServiceImpl<BonusLogMapper, BonusLog> i
         wrapper.eq(userId != null, BonusLog::getUserId, userId);
         List<BonusLogVO> voList = BonusLogConvert.INSTANCE.convert(list(wrapper));
         return voList.stream().collect(Collectors.groupingBy(BonusLogVO::getContent));
+    }
+
+    @Override
+    public Long todayUserCheckCount() {
+        LambdaQueryWrapper<BonusLog> wrapper = new LambdaQueryWrapper<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        // 构造开始时间
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date start = calendar.getTime();
+        // 构造结束时间
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        Date end = calendar.getTime();
+        wrapper.eq(BonusLog::getContent, BonusActionEnum.DAILY_SIGN.getDesc())
+                .between(BonusLog::getCreateTime, start, end);
+        return count(wrapper);
     }
 
 }

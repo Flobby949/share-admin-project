@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import top.ssy.share.admin.common.result.PageResult;
 import top.ssy.share.admin.dto.ResourceAuditDTO;
 import top.ssy.share.admin.entity.Resource;
+import top.ssy.share.admin.enums.ResourceStatusEnum;
 import top.ssy.share.admin.query.ResourceQuery;
 import top.ssy.share.admin.vo.ResourceVO;
+
+import java.util.Map;
 
 /**
  * @author : Flobby
@@ -25,4 +28,8 @@ public interface ResourceService extends IService<Resource> {
     PageResult<ResourceVO> page(ResourceQuery query);
 
     void audit(ResourceAuditDTO dto);
+
+    Map<String, Long> countResource();
+
+    Long countResourceByStatus(ResourceStatusEnum status);
 }

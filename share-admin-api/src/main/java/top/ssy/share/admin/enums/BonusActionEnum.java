@@ -17,6 +17,8 @@ public enum BonusActionEnum {
     RESOURCE_EXCHANGE(0, "resourceExchange", "资源兑换"),
 
     DAILY_SIGN(5, "dailySign", "每日签到"),
+
+    RESOURCE_BE_EXCHANGED(5, "resourceBeExchanged", "资源被兑换"),
     ;
 
     private final Integer bonus;

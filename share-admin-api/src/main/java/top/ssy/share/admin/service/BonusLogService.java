@@ -22,4 +22,6 @@ public interface BonusLogService extends IService<BonusLog> {
     void addBonusLog(Integer userId, BonusActionEnum contentEnum);
 
     Map<String, List<BonusLogVO>> userBonusResult(Integer userId);
+
+    Long todayUserCheckCount();
 }
